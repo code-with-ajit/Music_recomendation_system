@@ -13,7 +13,11 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-print("YouTube Key Loaded:", os.getenv("YOUTUBE_API_KEY"))
+# ✅ Safe check for API key (do NOT print actual key)
+if os.getenv("YOUTUBE_API_KEY"):
+    print("YouTube API Key Loaded ✅")
+else:
+    print("WARNING: YouTube API Key Missing ❌")
 
 
 # ==============================
@@ -61,7 +65,7 @@ def home():
 
 @app.route("/recommend", methods=["POST"])
 def get_recommendations():
-    data = request.json
+    data = request.get_json()
     song = data.get("song")
 
     if not song:
@@ -86,7 +90,7 @@ def get_recommendations():
 
 @app.route("/search", methods=["POST"])
 def search():
-    data = request.json
+    data = request.get_json()
     query = data.get("query")
 
     results = search_songs(query)
@@ -94,8 +98,5 @@ def search():
     return jsonify({"suggestions": results})
 
 
-# ==============================
-# Run Server
-# ==============================
-if __name__ == "__main__":
-    app.run(debug=True)
+# ❌ DO NOT add app.run()
+# Render uses Gunicorn automatically
