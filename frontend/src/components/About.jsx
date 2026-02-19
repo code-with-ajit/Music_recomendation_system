@@ -8,7 +8,7 @@ import profileImage from '../assets/ajit.png';
 // 🔥 Team Images (IMPORTANT — must import)
 import shrutiImg from '../assets/shruti.png';
 import sujataImg from '../assets/sujata.png';
-import bhagyashreeImg from '../assets/Swami.png';
+import bhagyashreeImg from '../assets/swami.png';
 
 const About = () => {
 
