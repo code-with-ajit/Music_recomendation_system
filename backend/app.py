@@ -13,8 +13,9 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Safe check for API key (do NOT print actual key)
-if os.getenv("YOUTUBE_API_KEY"):
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+
+if YOUTUBE_API_KEY:
     print("YouTube API Key Loaded ✅")
 else:
     print("WARNING: YouTube API Key Missing ❌")
@@ -24,19 +25,18 @@ else:
 # 🔥 YouTube Search Function
 # ==============================
 def get_youtube_video(song_name, artist_name):
-    api_key = os.getenv("YOUTUBE_API_KEY")
-
-    if not api_key:
+    if not YOUTUBE_API_KEY:
         return None
 
-    search_query = f"{song_name} {artist_name} official song"
+    # Better search query (important for your dataset)
+    search_query = f"{song_name} {artist_name} official audio"
 
     url = "https://www.googleapis.com/youtube/v3/search"
 
     params = {
         "part": "snippet",
         "q": search_query,
-        "key": api_key,
+        "key": YOUTUBE_API_KEY,
         "type": "video",
         "maxResults": 1
     }
@@ -71,19 +71,30 @@ def get_recommendations():
     if not song:
         return jsonify({
             "matched_song": None,
-            "recommendations": ["No song provided"]
+            "recommendations": []
         })
 
     result = recommend(song)
 
-    # 🔥 Add YouTube video for each recommendation
-    if "recommendations" in result:
-        for rec in result["recommendations"]:
-            video_id = get_youtube_video(
-                rec.get("track_name", ""),
-                rec.get("artist", "")
-            )
-            rec["youtube_video_id"] = video_id
+    # ==============================
+    # 🔥 Add YouTube video to MATCHED SONG
+    # ==============================
+    matched = result.get("matched_song")
+
+    if matched:
+        matched["youtube_video_id"] = get_youtube_video(
+            matched.get("title", ""),
+            matched.get("artist", "")
+        )
+
+    # ==============================
+    # 🔥 Add YouTube video to RECOMMENDATIONS
+    # ==============================
+    for rec in result.get("recommendations", []):
+        rec["youtube_video_id"] = get_youtube_video(
+            rec.get("title", ""),
+            rec.get("artist", "")
+        )
 
     return jsonify(result)
 
@@ -94,9 +105,4 @@ def search():
     query = data.get("query")
 
     results = search_songs(query)
-
     return jsonify({"suggestions": results})
-
-
-# ❌ DO NOT add app.run()
-# Render uses Gunicorn automatically
