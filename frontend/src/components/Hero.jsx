@@ -15,7 +15,7 @@ const Hero = ({ onSearch }) => {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/search", {
+            const response = await fetch("https://music-recomendation-system.onrender.com/search", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const Hero = ({ onSearch }) => {
                             <Music className="w-10 h-10 text-white" />
                         </div>
                     </motion.div>
-                    
+
                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-pink-200 leading-tight">
                         Discover Music
                     </h1>
@@ -155,14 +155,14 @@ const Hero = ({ onSearch }) => {
                     <div className={`relative transition-all duration-300 ${isFocused || song ? 'scale-105' : ''}`}>
                         {/* Glow Effect */}
                         <div className={`absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-lg opacity-0 transition-opacity duration-300 ${isFocused || song ? 'opacity-50' : ''}`}></div>
-                        
+
                         {/* Search Input Container */}
                         <div className="relative bg-white/10 backdrop-blur-xl border-2 border-white/20 rounded-full shadow-2xl overflow-hidden">
                             <div className="flex items-center">
                                 <div className="pl-6 pr-4">
                                     <Search className="w-6 h-6 text-gray-400" />
                                 </div>
-                                
+
                                 <input
                                     type="text"
                                     value={song}
