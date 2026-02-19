@@ -4,6 +4,8 @@ import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
+import Contact from './components/Contact';
+import Features from './components/Features';
 import MusicPlayer from './components/MusicPlayer';
 
 function App() {
@@ -16,7 +18,9 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
+          <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </AnimatePresence>
 

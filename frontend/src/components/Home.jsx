@@ -8,13 +8,13 @@ const Home = () => {
     const [matchedSong, setMatchedSong] = useState(null);
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [currentSong, setCurrentSong] = useState(null); // 🔥 NEW
+    const [currentSong, setCurrentSong] = useState(null);
 
     const fetchRecommendations = async (song) => {
         try {
             setLoading(true);
 
-            const response = await fetch("http://127.0.0.1:5000/recommend", {
+            const response = await fetch("https://music-recomendation-system.onrender.com/recommend", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +27,6 @@ const Home = () => {
             setMatchedSong(data.matched_song);
             setRecommendations(data.recommendations);
 
-            // Automatically set matched song as current song
             if (data.matched_song) {
                 setCurrentSong(data.matched_song);
             }
@@ -39,25 +38,35 @@ const Home = () => {
         }
     };
 
+
+    const handleSongSelect = (selectedSong) => {
+        // Set the selected song - MusicPlayer will auto-expand
+        setCurrentSong(selectedSong);
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
+            className="relative min-h-screen"
         >
+            {/* Hero Section */}
             <Hero onSearch={fetchRecommendations} />
 
-            <div className="relative z-10 pb-32">
+            {/* Recommendations Section */}
+            <div className="relative z-10 pb-20">
                 <RecommendationSection
                     matchedSong={matchedSong}
                     recommendations={recommendations}
                     loading={loading}
-                    onSelectSong={setCurrentSong}  // 🔥 PASS HANDLER
+                    onSelectSong={handleSongSelect}
                 />
             </div>
 
-            <MusicPlayer song={currentSong} /> {/* 🔥 PASS CURRENT SONG */}
+            {/* Music Player - Positioned in corner */}
+            <MusicPlayer song={currentSong} />
         </motion.div>
     );
 };

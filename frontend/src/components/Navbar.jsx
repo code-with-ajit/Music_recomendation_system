@@ -16,11 +16,12 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Update links to use real routes
+    // Navigation links
     const navLinks = [
         { name: 'Home', href: '/' },
-        { name: 'Recommendations', href: '/#recommendations' },
+        { name: 'Features', href: '/features' },
         { name: 'About', href: '/about' },
+        { name: 'Contact', href: '/contact' },
     ];
 
     const isActive = (path) => {
